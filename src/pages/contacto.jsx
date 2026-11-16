@@ -24,10 +24,12 @@ function Contacto() {
 
         <Formik
           initialValues={{
-            nombre: '',
-            email: '',
-            mensaje: ''
-          }}
+  nombre: '',
+  apellido: '',
+  email: '',
+  asunto: '',
+  mensaje: ''
+}}
 
           validate={(values) => {
             const errors = {};
@@ -35,6 +37,13 @@ function Contacto() {
             if (!values.nombre.trim()) {
               errors.nombre = 'El nombre es obligatorio';
             }
+            if (!values.apellido.trim()) {
+  errors.apellido = 'El apellido es obligatorio';
+}
+
+if (!values.asunto.trim()) {
+  errors.asunto = 'El asunto es obligatorio';
+}
 
             if (!values.email.trim()) {
               errors.email = 'El correo es obligatorio';
@@ -66,6 +75,7 @@ function Contacto() {
               onChange={() => setEnviado(false)}
             >
 
+
               <div className="form-grupo">
                 <label htmlFor="nombre">Nombre</label>
 
@@ -83,6 +93,23 @@ function Contacto() {
                 />
               </div>
 
+<div className="form-grupo">
+  <label htmlFor="apellido">Apellido</label>
+
+  <Field
+    type="text"
+    id="apellido"
+    name="apellido"
+    placeholder="Tu apellido"
+  />
+
+  <ErrorMessage
+    name="apellido"
+    component="span"
+    className="form-error"
+  />
+</div>
+
               <div className="form-grupo">
                 <label htmlFor="email">Correo electrónico</label>
 
@@ -99,6 +126,23 @@ function Contacto() {
                   className="form-error"
                 />
               </div>
+
+<div className="form-grupo">
+  <label htmlFor="asunto">Asunto</label>
+
+  <Field
+    type="text"
+    id="asunto"
+    name="asunto"
+    placeholder="¿Sobre qué querés consultarnos?"
+  />
+
+  <ErrorMessage
+    name="asunto"
+    component="span"
+    className="form-error"
+  />
+</div>
 
               <div className="form-grupo">
                 <label htmlFor="mensaje">Mensaje</label>

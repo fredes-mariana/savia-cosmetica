@@ -12,6 +12,8 @@ function Carrito({ cerrarCarrito }) {
 } = useContext(CarritoContext);
 const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
  const [mostrarCompra, setMostrarCompra] = useState(false);
+const [productoAEliminar, setProductoAEliminar] = useState(null);
+ const [cambioCantidad, setCambioCantidad] = useState(null);
 const total = carrito.reduce(
     (acumulador, producto) =>
       acumulador + producto.precio * producto.cantidad,
@@ -49,7 +51,12 @@ const total = carrito.reduce(
 
   <div className="carrito-cantidad">
     <button
-      onClick={() => disminuirCantidad(producto.id)}
+      onClick={() =>
+  setCambioCantidad({
+    producto,
+    accion: 'disminuir'
+  })
+}
       disabled={producto.cantidad === 1}
     >
       −
@@ -58,7 +65,11 @@ const total = carrito.reduce(
     <span>{producto.cantidad}</span>
 
     <button
-      onClick={() => aumentarCantidad(producto.id)}
+      onClick={() =>setCambioCantidad({
+    producto,
+    accion: 'aumentar'
+  })
+}
     >
       +
     </button>
@@ -69,11 +80,11 @@ const total = carrito.reduce(
   </p>
 
   <button
-    className="carrito-eliminar"
-    onClick={() => eliminarProducto(producto.id)}
-  >
-    Eliminar
-  </button>
+  className="carrito-eliminar"
+  onClick={() => setProductoAEliminar(producto)}
+>
+  Eliminar
+</button>
 </div>
 
               </div>
@@ -183,6 +194,93 @@ const total = carrito.reduce(
     </div>
   </div>
 )}
+
+{productoAEliminar && (
+  <div className="modal-overlay">
+    <div
+      className="modal-contenido"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-eliminar"
+    >
+      <h2 id="titulo-eliminar">
+        ¿Eliminar producto?
+      </h2>
+
+      <p>
+        ¿Querés eliminar {productoAEliminar.nombre}
+        de tu carrito?
+      </p>
+
+      <div className="modal-botones">
+        <button
+          className="modal-cancelar"
+          onClick={() => setProductoAEliminar(null)}
+        >
+          Cancelar
+        </button>
+
+        <button
+          className="modal-confirmar"
+          onClick={() => {
+            eliminarProducto(productoAEliminar.id);
+            setProductoAEliminar(null);
+          }}
+        >
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* MODAL PARA CAMBIAR CANTIDADES */}
+{cambioCantidad && (
+  <div className="modal-overlay">
+    <div
+      className="modal-contenido"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-cantidad"
+    >
+      <h2 id="titulo-cantidad">
+        Confirmar cantidad 🌿
+      </h2>
+
+      <p>
+        ¿Querés {cambioCantidad.accion === 'aumentar'
+          ? 'agregar una unidad de'
+          : 'quitar una unidad de'}{' '}
+        {cambioCantidad.producto.nombre}?
+      </p>
+
+      <div className="modal-botones">
+        <button
+          className="modal-cancelar"
+          onClick={() => setCambioCantidad(null)}
+        >
+          Cancelar
+        </button>
+
+        <button
+          className="modal-confirmar"
+          onClick={() => {
+            if (cambioCantidad.accion === 'aumentar') {
+              aumentarCantidad(cambioCantidad.producto.id);
+            } else {
+              disminuirCantidad(cambioCantidad.producto.id);
+            }
+
+            setCambioCantidad(null);
+          }}
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

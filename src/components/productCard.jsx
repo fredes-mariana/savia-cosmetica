@@ -8,10 +8,15 @@ function ProductCard({ producto }) {
 
   
 const [agregado, setAgregado] = useState(false);
-
+const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
 const handleAgregar = () => {
+  setMostrarConfirmacion(true);
+};
+
+const confirmarAgregar = () => {
   agregarAlCarrito(producto);
   setAgregado(true);
+  setMostrarConfirmacion(false);
 };
 
 useEffect(() => {
@@ -26,6 +31,7 @@ useEffect(() => {
 
 
   return (
+    <>
     <article className="product-card">
 
       <div className="product-image">
@@ -60,6 +66,43 @@ useEffect(() => {
 )}
       </div>
     </article>
+ {/* MODAL PARA AGREGAR AL CARRITO */}
+    {mostrarConfirmacion && (
+      <div className="modal-overlay">
+        <div
+          className="modal-contenido"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="titulo-agregar"
+        >
+          <h2 id="titulo-agregar">
+            Agregar al carrito 🌿
+          </h2>
+
+          <p>
+            ¿Querés agregar {producto.nombre}
+            a tu carrito?
+          </p>
+
+          <div className="modal-botones">
+            <button
+              className="modal-cancelar"
+              onClick={() => setMostrarConfirmacion(false)}
+            >
+              Cancelar
+            </button>
+
+            <button
+              className="modal-confirmar"
+              onClick={confirmarAgregar}
+            >
+              Sí, agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
   );
 }
 
